@@ -55,3 +55,6 @@ schema= StructType([
     StructField("Campaigns",ArrayType(StringType()),False)
 ]
 )
+
+# https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/functions.html
+
