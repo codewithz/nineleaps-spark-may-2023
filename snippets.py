@@ -173,4 +173,60 @@ def convertCase(str):
                                         # Ex- for name 'Batra, Mohit, ' returns => 'Batra, Mohit'
     
     return result 
+#   -------------- Window Functions ----------------------
+  # Create schema for Yellow Taxi data
+yellowTaxiSchema = (
+                        StructType
+                        ([ 
+                            StructField("VendorId"               , IntegerType()   , True),
+                            StructField("PickupTime"             , TimestampType() , True),
+                            StructField("DropTime"               , TimestampType() , True),
+                            StructField("PassengerCount"         , DoubleType()    , True),
+                            StructField("TripDistance"           , DoubleType()    , True),
+                            StructField("RateCodeId"             , DoubleType()    , True),
+                            StructField("StoreAndFwdFlag"        , StringType()    , True),
+                            StructField("PickupLocationId"       , IntegerType()   , True),
+                            StructField("DropLocationId"         , IntegerType()   , True),
+                            StructField("PaymentType"            , IntegerType()   , True),
+                            StructField("FareAmount"             , DoubleType()    , True),
+                            StructField("Extra"                  , DoubleType()    , True),
+                            StructField("MtaTax"                 , DoubleType()    , True),
+                            StructField("TipAmount"              , DoubleType()    , True),
+                            StructField("TollsAmount"            , DoubleType()    , True),
+                            StructField("ImprovementSurcharge"   , DoubleType()    , True),
+                            StructField("TotalAmount"            , DoubleType()    , True),
+                            StructField("CongestionSurcharge"    , DoubleType()    , True),
+                            StructField("AirportFee"             , DoubleType()    , True)
+                        ])
+                   )
+
+
+# Read Yellow Taxis file
+yellowTaxiDF = (
+                  spark
+                    .read
+                    .option("header", "true")    
+                    .schema(yellowTaxiSchema)    
+                    .csv("E:\SparkData\Raw\YellowTaxis_202210.csv")
+               )
+
+
+# Create temp view
+yellowTaxiDF.createOrReplaceTempView("YellowTaxis")
+
+# Create schema for Taxi Zones data
+taxiZonesSchema = "PickupLocationId INT, Borough STRING, Zone STRING, ServiceZone STRING"
+
+
+# Read Taxi Zones file
+taxiZonesDF = (
+                  spark
+                    .read                    
+                    .schema(taxiZonesSchema)
+                    .csv("E:\SparkData\Raw\TaxiZones.csv")
+              )
+
+
+# Create temp view
+taxiZonesDF.createOrReplaceTempView("TaxiZones")
 
