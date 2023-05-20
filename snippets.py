@@ -229,4 +229,26 @@ taxiZonesDF = (
 
 # Create temp view
 taxiZonesDF.createOrReplaceTempView("TaxiZones")
+# -------------- Function for calculation------
+def getDataFrameStats(dataFrame, columnName):
+
+    outputDF = (
+                    dataFrame
+
+                        # Get partition number for each record
+                        .withColumn("Partition Number", spark_partition_id())
+        
+        
+                        # Group by partition, and calculate stats for a column
+                        .groupBy("Partition Number")
+                        .agg(
+                                  count("*").alias("Record Count"),
+                                  min(columnName).alias("Min Column Value"),
+                                  max(columnName).alias("Max Column Value")
+                            )
+
+                        .orderBy("Partition Number")
+               )
+
+    return outputDF
 
