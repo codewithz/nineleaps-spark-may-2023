@@ -89,4 +89,43 @@ fire_schema = StructType([StructField('CallNumber', IntegerType(), True),
  StructField('RowID', StringType(), True),
  StructField('Delay', FloatType(), True)])
 
+# -------------- Bring in common column name [CSV] --------------------
+
+df_wake=df_wake\
+        .withColumnRenamed("HSISID","datasetId") \
+        .withColumnRenamed("NAME","name") \
+        .withColumnRenamed("ADDRESS1","address1") \
+        .withColumnRenamed("ADDRESS2","address2") \
+        .withColumnRenamed("CITY","city") \
+        .withColumnRenamed("STATE","state") \
+        .withColumnRenamed("POSTALCODE","zip") \
+        .withColumnRenamed("PHONENUMBER","tel") \
+        .withColumnRenamed("RESTAURANTOPENDATE","dateStart") \
+        .withColumnRenamed("FACILITYTYPE","type") \
+        .withColumnRenamed("X","geoX") \
+        .withColumnRenamed("Y","geoY") \
+        .drop("OBJECTID") \
+        .drop("PERMITID") \
+        .drop("GEOCODESTATUS")
+
+# -------------- Bring in common column name [JSON] --------------------
+
+
+
+df_durham=df_durham \
+        .withColumn("datasetId",col("fields.id")) \
+        .withColumn("name",col("fields.premise_name")) \
+        .withColumn("address1",col("fields.premise_address1")) \
+        .withColumn("address2",col("fields.premise_address2")) \
+        .withColumn("city",col("fields.premise_city")) \
+        .withColumn("state",col("fields.premise_state")) \
+        .withColumn("zip",col("fields.premise_zip")) \
+        .withColumn("tel",col("fields.premise_phone")) \
+        .withColumn("dateStart",col("fields.opening_date")) \
+        .withColumn("type",split(col("fields.type_description")," - ").getItem(1)) \
+        .withColumn("geoX",col("fields.geolocation").getItem(0)) \
+        .withColumn("geoY",col("fields.geolocation").getItem(1))
+
+df_durham.printSchema()
+
 
