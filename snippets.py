@@ -155,4 +155,22 @@ df_durham=df_durham \
 
 df_durham.printSchema()
 
+#------------------ UDF -------------------------------
+def convertCase(str):
+    
+    result = ""
+    
+    nameWordsArray = str.split(",")
+    
+    for nameWord in nameWordsArray:        
+       result = (result
+                    + nameWord[0:1].upper()             # Ex- for word 'MOHIT', returns=> 'M'
+                    + nameWord[1:len(nameWord)].lower() # Ex- for word 'MOHIT', returns=> 'ohit, '
+                    + ", "   
+                )
+    
+    result = result[0:len(result) - 2]
+                                        # Ex- for name 'Batra, Mohit, ' returns => 'Batra, Mohit'
+    
+    return result 
 
