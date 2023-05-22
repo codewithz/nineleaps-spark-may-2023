@@ -251,4 +251,52 @@ def getDataFrameStats(dataFrame, columnName):
                )
 
     return outputDF
+  
+# -------- Dynamic Resource Allocation --------------  
+from pyspark.sql import SparkSession
+from pyspark.sql.types import *
+from pyspark.sql.functions import *
+
+spark = (
+            SparkSession
+                .builder
+                .appName("ResourceAllocationApp")
+    
+    
+                # Connect to multi-node cluster
+                .master("spark://CrystalTalks-PC:7077")
+    
+                .config("spark.sql.adaptive.enabled", "false")
+    
+
+                # Enable dynamic allocation
+                .config("spark.dynamicAllocation.enabled",                 "true")
+                .config("spark.dynamicAllocation.shuffleTracking.enabled", "true")
+    
+    
+                # Define configuration for application
+                .config("spark.executor.memory",    "2g")
+                .config("spark.executor.cores",     "2")
+    
+                .config("spark.executor.instances", "2")
+    
+    
+                # Define minimum and maximum executors
+                .config("spark.dynamicAllocation.minExecutors", "0")
+                .config("spark.dynamicAllocation.maxExecutors", "5")
+    
+                # Set scheduler backlog timeout
+                .config("spark.dynamicAllocation.schedulerBacklogTimeout",   "1s")
+    
+                # Set executor idle timeout
+                .config("spark.dynamicAllocation.executorIdleTimeout",       "10s")
+    
+                # Set cached idle timeout
+                .config("spark.dynamicAllocation.cachedExecutorIdleTimeout", "10s")
+
+    
+                .getOrCreate()
+        )
+
+spark
 
